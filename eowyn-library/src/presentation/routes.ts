@@ -1,0 +1,30 @@
+import { Router } from 'express';
+import { AuthRoutes } from './auth/routes';
+import { CategoryRoutes } from './category/routes';
+import { BookRoutes } from './book/routes';
+import { LoanRoutes } from './loan/routes';
+
+
+
+
+export class AppRoutes {
+
+
+  static get routes(): Router {
+
+    const router = Router();
+    
+    // Definir las rutas
+    router.use('/api/auth', AuthRoutes.routes );
+    router.use('/api/categories', CategoryRoutes.routes );
+    router.use('/api/books', BookRoutes.routes );
+    router.use('/api/loans', LoanRoutes.routes );
+
+
+
+    return router;
+  }
+
+
+}
+

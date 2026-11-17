@@ -1,0 +1,22 @@
+cd eowyn-library
+docker compose up -d
+npm run migrate:latest
+npm run dev
+
+cd performance-k6
+docker build -t influxdb-k6 influxdb
+docker run -d --name influxdb -p 8086:8086 influxdb-k6
+docker run -d --name grafana -p 3001:3000 grafana/grafana
+
+docker start influxdb grafana
+
+k6 run --out influxdb=http://k6user:k6pass@localhost:8086/k6db --tag prueba=rampUpSteadyState rampUpSteadyState.js
+k6 run --out influxdb=http://k6user:k6pass@localhost:8086/k6db --tag prueba=rampUpRampDown rampUpRampDown.js
+k6 run --out influxdb=http://k6user:k6pass@localhost:8086/k6db --tag prueba=cargaConstante cargaConstante.js
+k6 run --out influxdb=http://k6user:k6pass@localhost:8086/k6db --tag prueba=cargaPico cargaPico.js
+
+set K6_WEB_DASHBOARD=true&& k6 run cargaPico.js
+
+http://localhost:3001
+Data source InfluxDB: URL http://host.docker.internal:8086, Database k6db, User k6user, Password k6pass, Query language InfluxQL
+Dashboards: grafana/eowyn-dashboard.json (Import), 14801 K6 Dashboard, 2587 k6 Load Testing Results

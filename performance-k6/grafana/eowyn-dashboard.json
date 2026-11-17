@@ -1,0 +1,1709 @@
+{
+ "description": "KPIs del informe de performance (Grupo 3) en tiempo real desde InfluxDB.",
+ "editable": true,
+ "liveNow": true,
+ "panels": [
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 0
+   },
+   "id": 1,
+   "panels": [],
+   "title": "Resumen de la prueba (KPIs del informe)",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "MÃ¡ximo de VUs concurrentes en el rango.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 0,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "blue",
+        "value": null
+       }
+      ]
+     },
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 0,
+    "y": 1
+   },
+   "id": 2,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT max(\"value\") FROM \"vus\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "VUs mÃ¡x.",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Total de peticiones HTTP ejecutadas.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 0,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "blue",
+        "value": null
+       }
+      ]
+     },
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 3,
+    "y": 1
+   },
+   "id": 3,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT count(\"value\") FROM \"http_reqs\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Requests",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Veces que se completÃ³ el flujo del script.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 0,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "blue",
+        "value": null
+       }
+      ]
+     },
+     "unit": "none"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 6,
+    "y": 1
+   },
+   "id": 4,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT count(\"value\") FROM \"iterations\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Iteraciones",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Promedio de peticiones por segundo. Umbral del informe: > 3 req/s.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 2,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "red",
+        "value": null
+       },
+       {
+        "color": "green",
+        "value": 3
+       }
+      ]
+     },
+     "unit": "reqps"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 9,
+    "y": 1
+   },
+   "id": 5,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "mean"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT sum(\"value\") FROM \"http_reqs\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time(1s) fill(none)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Throughput",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Promedio de http_req_duration. Umbral: < 500 ms.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       },
+       {
+        "color": "yellow",
+        "value": 400
+       },
+       {
+        "color": "red",
+        "value": 500
+       }
+      ]
+     },
+     "unit": "ms"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 12,
+    "y": 1
+   },
+   "id": 6,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Promedio",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "El 95% de las peticiones respondiÃ³ en menos de este tiempo. Umbral: < 1000 ms.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       },
+       {
+        "color": "yellow",
+        "value": 800
+       },
+       {
+        "color": "red",
+        "value": 1000
+       }
+      ]
+     },
+     "unit": "ms"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 15,
+    "y": 1
+   },
+   "id": 7,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "p95",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Porcentaje de respuestas HTTP >= 400. Umbral: < 1%.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 2,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       },
+       {
+        "color": "red",
+        "value": 1
+       }
+      ]
+     },
+     "unit": "percent"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 18,
+    "y": 1
+   },
+   "id": 8,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") * 100 FROM \"http_req_failed\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Errores",
+   "type": "stat"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Porcentaje de validaciones check() correctas. Umbral: 100%.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 1,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "red",
+        "value": null
+       },
+       {
+        "color": "green",
+        "value": 99.99
+       }
+      ]
+     },
+     "unit": "percent"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 4,
+    "w": 3,
+    "x": 21,
+    "y": 1
+   },
+   "id": 9,
+   "options": {
+    "colorMode": "background",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "lastNotNull"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value"
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") * 100 FROM \"checks\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Checks",
+   "type": "stat"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 5
+   },
+   "id": 10,
+   "panels": [],
+   "title": "Carga vs tiempo de respuesta",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "CÃ³mo crece el throughput a medida que suben los usuarios virtuales (forma del modelo de carga).",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "fillOpacity": 10,
+      "lineWidth": 2,
+      "showPoints": "never"
+     }
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Usuarios virtuales"
+      },
+      "properties": [
+       {
+        "id": "custom.axisPlacement",
+        "value": "right"
+       },
+       {
+        "id": "unit",
+        "value": "none"
+       },
+       {
+        "id": "custom.drawStyle",
+        "value": "line"
+       },
+       {
+        "id": "custom.lineInterpolation",
+        "value": "stepAfter"
+       },
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "purple",
+         "mode": "fixed"
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Requests por segundo"
+      },
+      "properties": [
+       {
+        "id": "unit",
+        "value": "reqps"
+       },
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "green",
+         "mode": "fixed"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 9,
+    "w": 12,
+    "x": 0,
+    "y": 6
+   },
+   "id": 11,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "Usuarios virtuales",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT max(\"value\") FROM \"vus\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter GROUP BY time(1s) fill(previous)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "Requests por segundo",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT sum(\"value\") FROM \"http_reqs\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time(1s) fill(0)",
+     "rawQuery": true,
+     "refId": "B",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Usuarios virtuales vs Throughput",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "LÃ­nea roja punteada = umbral p95 de 1000 ms; amarilla = umbral promedio de 500 ms.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "fillOpacity": 0,
+      "lineWidth": 2,
+      "showPoints": "never",
+      "thresholdsStyle": {
+       "mode": "dashed"
+      }
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "transparent",
+        "value": null
+       },
+       {
+        "color": "yellow",
+        "value": 500
+       },
+       {
+        "color": "red",
+        "value": 1000
+       }
+      ]
+     },
+     "unit": "ms"
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "MÃ¡ximo"
+      },
+      "properties": [
+       {
+        "id": "custom.lineStyle",
+        "value": {
+         "fill": "dot"
+        }
+       },
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "#888888",
+         "mode": "fixed"
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "p95"
+      },
+      "properties": [
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "orange",
+         "mode": "fixed"
+        }
+       },
+       {
+        "id": "custom.lineWidth",
+        "value": 3
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Promedio"
+      },
+      "properties": [
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "blue",
+         "mode": "fixed"
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "p90"
+      },
+      "properties": [
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "yellow",
+         "mode": "fixed"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 9,
+    "w": 12,
+    "x": 12,
+    "y": 6
+   },
+   "id": 12,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "calcs": [
+      "mean",
+      "max"
+     ],
+     "displayMode": "table",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "Promedio",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "p90",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT percentile(\"value\", 90) FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "B",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "p95",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "C",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "MÃ¡ximo",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT max(\"value\") FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "D",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Tiempo de respuesta (promedio, p90, p95, mÃ¡ximo)",
+   "type": "timeseries"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 15
+   },
+   "id": 13,
+   "panels": [],
+   "title": "Detalle por endpoint",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Compara quÃ© endpoint se degrada primero bajo carga.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "lineWidth": 2,
+      "showPoints": "never",
+      "thresholdsStyle": {
+       "mode": "dashed"
+      }
+     },
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "transparent",
+        "value": null
+       },
+       {
+        "color": "red",
+        "value": 1000
+       }
+      ]
+     },
+     "unit": "ms"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 16
+   },
+   "id": 14,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "$tag_method $tag_name",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT percentile(\"value\", 95) FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval), \"method\", \"name\" fill(null)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Percentil 95 por endpoint",
+   "transformations": [
+    {
+     "id": "renameByRegex",
+     "options": {
+      "regex": "(.*)http://localhost:3000(.*)",
+      "renamePattern": "$1$2"
+     }
+    }
+   ],
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "DistribuciÃ³n del throughput entre endpoints.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "fillOpacity": 20,
+      "lineWidth": 1,
+      "showPoints": "never",
+      "stacking": {
+       "mode": "normal"
+      }
+     },
+     "unit": "reqps"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 16
+   },
+   "id": 15,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "$tag_method $tag_name",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT sum(\"value\") FROM \"http_reqs\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time(1s), \"method\", \"name\" fill(0)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Requests por segundo por endpoint",
+   "transformations": [
+    {
+     "id": "renameByRegex",
+     "options": {
+      "regex": "(.*)http://localhost:3000(.*)",
+      "renamePattern": "$1$2"
+     }
+    }
+   ],
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Tiempos en ms. p95 en rojo si supera 1000 ms.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "align": "auto",
+      "width": 105
+     },
+     "unit": "ms"
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "MÃ©todo"
+      },
+      "properties": [
+       {
+        "id": "custom.width",
+        "value": 80
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Endpoint"
+      },
+      "properties": [
+       {
+        "id": "custom.width",
+        "value": 230
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Requests"
+      },
+      "properties": [
+       {
+        "id": "unit",
+        "value": "none"
+       },
+       {
+        "id": "decimals",
+        "value": 0
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "p95"
+      },
+      "properties": [
+       {
+        "id": "custom.cellOptions",
+        "value": {
+         "type": "color-background"
+        }
+       },
+       {
+        "id": "thresholds",
+        "value": {
+         "mode": "absolute",
+         "steps": [
+          {
+           "color": "green",
+           "value": null
+          },
+          {
+           "color": "yellow",
+           "value": 800
+          },
+          {
+           "color": "red",
+           "value": 1000
+          }
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Promedio"
+      },
+      "properties": [
+       {
+        "id": "custom.cellOptions",
+        "value": {
+         "type": "color-text"
+        }
+       },
+       {
+        "id": "thresholds",
+        "value": {
+         "mode": "absolute",
+         "steps": [
+          {
+           "color": "green",
+           "value": null
+          },
+          {
+           "color": "red",
+           "value": 500
+          }
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Endpoint"
+      },
+      "properties": [
+       {
+        "id": "mappings",
+        "value": [
+         {
+          "options": {
+           "pattern": "http://localhost:3000(.*)",
+           "result": {
+            "text": "$1"
+           }
+          },
+          "type": "regex"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 16,
+    "x": 0,
+    "y": 24
+   },
+   "id": 16,
+   "options": {
+    "showHeader": true
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT count(\"value\") AS \"Requests\", mean(\"value\") AS \"Promedio\", median(\"value\") AS \"Mediana\", percentile(\"value\", 90) AS \"p90\", percentile(\"value\", 95) AS \"p95\", max(\"value\") AS \"MÃ¡ximo\" FROM \"http_req_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY \"method\", \"name\"",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "table"
+    }
+   ],
+   "title": "Resumen por endpoint",
+   "transformations": [
+    {
+     "id": "organize",
+     "options": {
+      "excludeByName": {
+       "Time": true
+      },
+      "renameByName": {
+       "method": "MÃ©todo",
+       "name": "Endpoint"
+      }
+     }
+    }
+   ],
+   "type": "table"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Cantidad de respuestas por cÃ³digo. Todo deberÃ­a ser 200.",
+   "fieldConfig": {
+    "defaults": {
+     "color": {
+      "mode": "thresholds"
+     },
+     "decimals": 0,
+     "thresholds": {
+      "mode": "absolute",
+      "steps": [
+       {
+        "color": "green",
+        "value": null
+       }
+      ]
+     },
+     "unit": "none"
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byRegexp",
+       "options": "HTTP [45].*"
+      },
+      "properties": [
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "red",
+         "mode": "fixed"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 8,
+    "x": 16,
+    "y": 24
+   },
+   "id": 17,
+   "options": {
+    "colorMode": "value",
+    "graphMode": "none",
+    "justifyMode": "center",
+    "reduceOptions": {
+     "calcs": [
+      "sum"
+     ],
+     "fields": "",
+     "values": false
+    },
+    "textMode": "value_and_name"
+   },
+   "targets": [
+    {
+     "alias": "HTTP $tag_status",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT count(\"value\") FROM \"http_reqs\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY \"status\"",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "CÃ³digos de estado HTTP",
+   "type": "stat"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 31
+   },
+   "id": 18,
+   "panels": [],
+   "title": "Calidad de las respuestas",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Cada check() de los scripts: estado HTTP y contenido de la respuesta.",
+   "fieldConfig": {
+    "defaults": {
+     "decimals": 1
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Correctos (%)"
+      },
+      "properties": [
+       {
+        "id": "unit",
+        "value": "percent"
+       },
+       {
+        "id": "custom.cellOptions",
+        "value": {
+         "type": "color-background"
+        }
+       },
+       {
+        "id": "thresholds",
+        "value": {
+         "mode": "absolute",
+         "steps": [
+          {
+           "color": "red",
+           "value": null
+          },
+          {
+           "color": "green",
+           "value": 99.99
+          }
+         ]
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Ejecutados"
+      },
+      "properties": [
+       {
+        "id": "decimals",
+        "value": 0
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 12,
+    "x": 0,
+    "y": 32
+   },
+   "id": 19,
+   "options": {
+    "showHeader": true
+   },
+   "targets": [
+    {
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") * 100 AS \"Correctos (%)\", count(\"value\") AS \"Ejecutados\" FROM \"checks\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter GROUP BY \"check\"",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "table"
+    }
+   ],
+   "title": "Checks (validaciones del script)",
+   "transformations": [
+    {
+     "id": "organize",
+     "options": {
+      "excludeByName": {
+       "Time": true
+      },
+      "renameByName": {
+       "check": "Check"
+      }
+     }
+    }
+   ],
+   "type": "table"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Si aparecen errores bajo carga, se ven como subidas de la lÃ­nea roja.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "lineWidth": 2,
+      "showPoints": "never"
+     },
+     "max": 100,
+     "min": 0,
+     "unit": "percent"
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Tasa de error (%)"
+      },
+      "properties": [
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "red",
+         "mode": "fixed"
+        }
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "Checks correctos (%)"
+      },
+      "properties": [
+       {
+        "id": "color",
+        "value": {
+         "fixedColor": "green",
+         "mode": "fixed"
+        }
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 12,
+    "x": 12,
+    "y": 32
+   },
+   "id": 20,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "Tasa de error (%)",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") * 100 FROM \"http_req_failed\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "Checks correctos (%)",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") * 100 FROM \"checks\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "B",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Tasa de error y checks en el tiempo",
+   "type": "timeseries"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 39
+   },
+   "id": 21,
+   "panels": [],
+   "title": "Desglose del tiempo HTTP",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "Si casi todo es 'Espera del servidor', el cuello de botella estÃ¡ en la API/base de datos y no en la red.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "fillOpacity": 40,
+      "lineWidth": 1,
+      "showPoints": "never",
+      "stacking": {
+       "mode": "normal"
+      }
+     },
+     "unit": "ms"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 40
+   },
+   "id": 22,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "calcs": [
+      "mean"
+     ],
+     "displayMode": "table",
+     "placement": "right"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "Bloqueado",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_blocked\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "ConexiÃ³n",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_connecting\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "B",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "EnvÃ­o",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_sending\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "C",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "Espera del servidor (TTFB)",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_waiting\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "D",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "RecepciÃ³n",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT mean(\"value\") FROM \"http_req_receiving\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter AND \"name\" =~ /^$endpoint$/ GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "E",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Fases de la peticiÃ³n (promedio)",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "influxdb",
+    "uid": "influxdb-k6"
+   },
+   "description": "DuraciÃ³n completa del flujo (incluye sleep(1)) y bytes por segundo.",
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "lineWidth": 2,
+      "showPoints": "never"
+     }
+    },
+    "overrides": [
+     {
+      "matcher": {
+       "id": "byName",
+       "options": "IteraciÃ³n p95"
+      },
+      "properties": [
+       {
+        "id": "unit",
+        "value": "ms"
+       }
+      ]
+     },
+     {
+      "matcher": {
+       "id": "byRegexp",
+       "options": "Datos.*"
+      },
+      "properties": [
+       {
+        "id": "unit",
+        "value": "Bps"
+       },
+       {
+        "id": "custom.axisPlacement",
+        "value": "right"
+       }
+      ]
+     }
+    ]
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 40
+   },
+   "id": 23,
+   "interval": "2s",
+   "options": {
+    "legend": {
+     "displayMode": "list",
+     "placement": "bottom"
+    },
+    "tooltip": {
+     "mode": "multi"
+    }
+   },
+   "targets": [
+    {
+     "alias": "IteraciÃ³n p95",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT percentile(\"value\", 95) FROM \"iteration_duration\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter GROUP BY time($__interval) fill(null)",
+     "rawQuery": true,
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "Datos recibidos",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT sum(\"value\") FROM \"data_received\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter GROUP BY time(1s) fill(0)",
+     "rawQuery": true,
+     "refId": "B",
+     "resultFormat": "time_series"
+    },
+    {
+     "alias": "Datos enviados",
+     "datasource": {
+      "type": "influxdb",
+      "uid": "influxdb-k6"
+     },
+     "query": "SELECT sum(\"value\") FROM \"data_sent\" WHERE \"prueba\" =~ /^$prueba$/ AND $timeFilter GROUP BY time(1s) fill(0)",
+     "rawQuery": true,
+     "refId": "C",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "DuraciÃ³n de la iteraciÃ³n y datos transferidos",
+   "type": "timeseries"
+  }
+ ],
+ "refresh": "5s",
+ "schemaVersion": 39,
+ "tags": [
+  "k6",
+  "eowyn",
+  "performance"
+ ],
+ "templating": {
+  "list": [
+   {
+    "allValue": ".*",
+    "current": {
+     "text": "All",
+     "value": "$__all"
+    },
+    "datasource": {
+     "type": "influxdb",
+     "uid": "influxdb-k6"
+    },
+    "definition": "SHOW TAG VALUES FROM \"http_reqs\" WITH KEY = \"prueba\"",
+    "includeAll": true,
+    "label": "Prueba",
+    "multi": true,
+    "name": "prueba",
+    "query": "SHOW TAG VALUES FROM \"http_reqs\" WITH KEY = \"prueba\"",
+    "refresh": 2,
+    "sort": 1,
+    "type": "query"
+   },
+   {
+    "allValue": ".*",
+    "current": {
+     "text": "All",
+     "value": "$__all"
+    },
+    "datasource": {
+     "type": "influxdb",
+     "uid": "influxdb-k6"
+    },
+    "definition": "SHOW TAG VALUES FROM \"http_req_duration\" WITH KEY = \"name\" WHERE \"prueba\" =~ /^$prueba$/",
+    "includeAll": true,
+    "label": "Endpoint",
+    "multi": true,
+    "name": "endpoint",
+    "query": "SHOW TAG VALUES FROM \"http_req_duration\" WITH KEY = \"name\" WHERE \"prueba\" =~ /^$prueba$/",
+    "refresh": 2,
+    "sort": 1,
+    "type": "query"
+   }
+  ]
+ },
+ "time": {
+  "from": "now-10m",
+  "to": "now"
+ },
+ "timezone": "browser",
+ "title": "Eowyn Library - Pruebas de Performance k6",
+ "uid": "eowyn-k6"
+}
