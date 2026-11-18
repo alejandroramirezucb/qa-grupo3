@@ -172,14 +172,14 @@ set K6_WEB_DASHBOARD=true&& k6 run cargaPico.js
 
 ### Scripts
 
-Todos siguen la estructura vista en clase (`options`, `check()`, `sleep(1)`) y cargas pequeñas:
+Todos siguen la estructura vista en clase (`options`, `check()`, `sleep(1)`). Como la API corre en local, se usan entre 20 y 60 usuarios para encontrar el punto de saturación:
 
 | Script | Carga | Flujo |
 |---|---|---|
-| `rampUpSteadyState.js` | 0 → 5 usuarios en 20 s, se mantiene 40 s | login → `GET /api/books` |
-| `rampUpRampDown.js` | 0 → 6 en 20 s, 20 s estable, 6 → 0 en 20 s | login → `GET /api/categories` |
-| `cargaConstante.js` | 4 usuarios durante 40 s | `POST /api/auth/login` |
-| `cargaPico.js` | base de 2, sube a 10 en 5 s, 10 s en 10, baja a 2 | login → `GET /api/books` |
+| `rampUpSteadyState.js` | 0 → 30 usuarios en 20 s, se mantiene 40 s | login → `GET /api/books` |
+| `rampUpRampDown.js` | 0 → 40 en 20 s, 20 s estable, 40 → 0 en 20 s | login → `GET /api/categories` |
+| `cargaConstante.js` | 20 usuarios durante 40 s | `POST /api/auth/login` |
+| `cargaPico.js` | base de 10, sube a 60 en 5 s, 10 s en 60, baja a 10 | login → `GET /api/books` |
 
 ### KPIs y umbrales
 
@@ -202,16 +202,16 @@ Todos siguen la estructura vista en clase (`options`, `check()`, `sleep(1)`) y c
 | Calidad | Checks por validación, tasa de error en el tiempo |
 | Desglose HTTP | Fases de la petición (espera del servidor, conexión, etc.), duración de iteración y datos transferidos |
 
-## Resultados (17/11/2026)
+## Resultados (18/11/2026)
 
 | Prueba | Usuarios | Promedio | p95 | Req/s | Errores | Checks |
 |---|---|---|---|---|---|---|
-| Ramp-Up / Steady State | 5 | 143 ms | 466 ms | 6.49 | 0% | 100% |
-| Ramp-Up / Ramp-Down | 6 | 156 ms | 438 ms | 6.36 | 0% | 100% |
-| Carga Constante | 4 | 96 ms | 135 ms | 3.61 | 0% | 100% |
-| Carga Pico | 10 | 136 ms | 353 ms | 6.96 | 0% | 100% |
+| Ramp-Up / Steady State | 30 | 2492 ms | 5438 ms | 8.40 | 0% | 100% |
+| Ramp-Up / Ramp-Down | 40 | 3024 ms | 6558 ms | 7.99 | 0% | 100% |
+| Carga Constante | 20 | 2942 ms | 3272 ms | 4.85 | 0% | 100% |
+| Carga Pico | 60 | 3832 ms | 9759 ms | 7.64 | 0% | 100% |
 
-El login es el endpoint más lento (usa bcrypt). Los tiempos dependen de la carga del equipo: con Grafana y otros programas abiertos en la misma máquina, el p95 de la carga pico llegó a 1493 ms.
+La API no da errores, pero no cumple los umbrales de tiempo: el throughput se queda en unas 8 req/s sin importar los usuarios. El cuello de botella es el login: `src/config/bcrypst.adapter.ts` usa `compareSync` de bcryptjs, que bloquea el único hilo de Node.js y deja en cola al resto de peticiones.
 
 ---
 
